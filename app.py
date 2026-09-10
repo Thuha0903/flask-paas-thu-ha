@@ -1,3 +1,4 @@
+import os
 import datetime
 import platform
 from flask import Flask
@@ -5,7 +6,7 @@ from flask import Flask
 app = Flask(__name__)
 visit_count = 0  # Bien dem luu trong RAM cua container
 
-
+# Thêm route API đếm lượt truy cập (in-memory counter)
 @app.route("/api/counter")
 def counter():
     global visit_count
@@ -15,6 +16,14 @@ def counter():
         "ghi_chu": "So nay se MAT khi container khoi dong lai!",
     }
 
+# BƯỚC 2: Thêm route đọc biến môi trường
+@app.route("/api/info")
+def info():
+    ten_sinh_vien = os.environ.get("STUDENT_NAME", "Chua dat bien moi truong")
+    return {
+        "sinh_vien": ten_sinh_vien,
+        "nguon_du_lieu": "Environment Variable tren Render, KHONG hardcode trong code",
+    }
 
 @app.route("/")
 def home():
@@ -44,5 +53,3 @@ def health():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-
-
